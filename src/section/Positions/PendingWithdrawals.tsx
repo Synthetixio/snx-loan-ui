@@ -57,6 +57,7 @@ const PendingWithdrawals = () => {
       className: `table-cell-amount`,
     },
   ];
+  console.log(pendingWithdrawals.eq(0))
   return (
     <Container>
       <Text size={20}>Pending Withdrawals</Text>
@@ -65,14 +66,16 @@ const PendingWithdrawals = () => {
           <Text size={16}>Total to claim</Text>
           <Text size={18}>{wei(pendingWithdrawals).toString(2)} ETH</Text>
         </FlexCol>
-        <ClaimButton onClick={claimPendingWithdrawals}>Claim</ClaimButton>
+        <ClaimButton 
+          disabled={pendingWithdrawals.eq(0)}
+        onClick={claimPendingWithdrawals}>Claim</ClaimButton>
       </TotalClaim>
-      <ReactTable
-        columns={columns}
-        data={data}
-        hideHeaders={true}
-        cardHeight="40px"
-      />
+      {/* <ReactTable */}
+      {/*   columns={columns} */}
+      {/*   data={data} */}
+      {/*   hideHeaders={true} */}
+      {/*   cardHeight="40px" */}
+      {/* /> */}
     </Container>
   );
 };
