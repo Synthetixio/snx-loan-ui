@@ -1,36 +1,39 @@
-import { useMemo } from 'react'
-import Wei from '@synthetixio/wei'
-import { GasPrice } from '@synthetixio/queries'
-import { Text16, Text } from '@/components/Base/Text'
-import { BaseCard } from '@/components/Base/Card'
-import styled from 'styled-components'
-import { FlexCol, FlexItemsCenter, FlexRow } from '@/components/Base/Div'
-import NumericInput from '@/components/NumericInput'
-import { sUSD, sETH } from '@/constants/tokens'
-import TokenSelector from '@/components/TokenSelector'
-import Loans from '@/containers/Loans'
-import Connector from '@/containers/connector'
-import { formatPercent } from '@/utils/formatters/number'
-import Balance from '@/components/Balance'
-import GasPriceDisplay from './GasPriceDisplay'
-import useGasPrice from '@/hooks/useGasPrice'
-import React, { useEffect } from 'react'
-import { ArrowRight } from 'react-feather'
-import { Flex } from '@/components/Base/Div'
-import type { TokenSelectorProps } from '@/components/TokenSelector'
-import AlertIcon from '@/assets/png/alert.png'
-import Image from 'next/image'
-import InfoTooltip from '../Tooltip'
+import { useMemo } from "react";
+import Wei from "@synthetixio/wei";
+import { GasPrice } from "@synthetixio/queries";
+import { Text16, Text } from "@/components/Base/Text";
+import { BaseCard } from "@/components/Base/Card";
+import styled from "styled-components";
+import { FlexCol, FlexItemsCenter, FlexRow } from "@/components/Base/Div";
+import NumericInput from "@/components/NumericInput";
+import { sUSD, sETH } from "@/constants/tokens";
+import TokenSelector from "@/components/TokenSelector";
+import Loans from "@/containers/Loans";
+import Connector from "@/containers/connector";
+import { formatPercent } from "@/utils/formatters/number";
+import Balance from "@/components/Balance";
+import GasPriceDisplay from "./GasPriceDisplay";
+import useGasPrice from "@/hooks/useGasPrice";
+import React, { useEffect } from "react";
+import { ArrowRight } from "react-feather";
+import { Flex } from "@/components/Base/Div";
+import type { TokenSelectorProps } from "@/components/TokenSelector";
+import AlertIcon from "@/assets/png/alert.png";
+import Image from "next/image";
+import InfoTooltip from "../Tooltip";
+import { useERC20Balance } from "@/hooks/useBalance";
+import { BaseButton } from '@/components/Base/Button';
 
 export interface ActionPanelProps extends TokenSelectorProps {
-  value: string
-  cRatio: Wei
-  newCRatio?: Wei
-  onChange: (value: string) => void
-  optimismLayerOneFee: Wei | null
-  onGasChange(gas: GasPrice | undefined): void
-  errorMsg?: string
-  disableInput?: boolean
+  value: string;
+  cRatio: Wei;
+  newCRatio?: Wei;
+  onChange: (value: string) => void;
+  optimismLayerOneFee: Wei | null;
+  onGasChange(gas: GasPrice | undefined): void;
+  errorMsg?: string;
+  disableInput?: boolean;
+  onSetMaxAmount?(): void;
 }
 
 const ActionPanel = ({
@@ -45,18 +48,21 @@ const ActionPanel = ({
   newCRatio,
   errorMsg,
   disableInput = false,
+  onSetMaxAmount,
 }: ActionPanelProps) => {
-  const { isL2 } = Connector.useContainer()
-  const { issueFeeRate, interestRate, minCRatio } = Loans.useContainer()
-  const gasPrice = useGasPrice()
+  const { isL2 } = Connector.useContainer();
+  const { issueFeeRate, interestRate, minCRatio } = Loans.useContainer();
+  const gasPrice = useGasPrice();
 
   useEffect(() => {
-    onGasChange(gasPrice)
-  }, [gasPrice, onGasChange])
+    onGasChange(gasPrice);
+  }, [gasPrice, onGasChange]);
 
   const cRatioInfoContent = `Ensure your position stays above ${formatPercent(
     minCRatio
-  )} to prevent liquidation.`
+  )} to prevent liquidation.`;
+
+  const { balance: tokenBalance } = useERC20Balance(activeToken.name);
 
   return (
     <>
@@ -67,12 +73,19 @@ const ActionPanel = ({
           tokenList={tokenList}
         />
         <BalanceContainer>
-          <NumericInput
-            disabled={disableInput}
-            onChange={onChange}
-            value={value}
-            placeholder="0.00"
-          />
+          <InputContainer>
+            {
+              activeToken.name === 'sETH' &&
+              onSetMaxAmount &&
+              <MaxButton onClick={onSetMaxAmount}>Max</MaxButton>
+            }
+            <NumericInput
+              disabled={disableInput}
+              onChange={onChange}
+              value={value}
+              placeholder="0.00"
+            />
+          </InputContainer>
           <Balance asset={activeToken.name} />
         </BalanceContainer>
       </TokenCard>
@@ -117,19 +130,19 @@ const ActionPanel = ({
         />
       </InfoCard>
     </>
-  )
-}
+  );
+};
 
 type CRatioProps = {
-  cRatio: Wei
-  minCRatio: Wei
-  newCRatio?: Wei
-}
+  cRatio: Wei;
+  minCRatio: Wei;
+  newCRatio?: Wei;
+};
 
 const CRatio = ({ cRatio, minCRatio, newCRatio }: CRatioProps) => {
-  if (cRatio.eq(0)) return <Text16>-</Text16>
+  if (cRatio.eq(0)) return <Text16>-</Text16>;
 
-  const isHealthy = cRatio.gt(minCRatio)
+  const isHealthy = cRatio.gt(minCRatio);
 
   return (
     <CRatioContainer>
@@ -147,14 +160,14 @@ const CRatio = ({ cRatio, minCRatio, newCRatio }: CRatioProps) => {
         </>
       )}
     </CRatioContainer>
-  )
-}
+  );
+};
 
-export default ActionPanel
+export default ActionPanel;
 
 const CRatioContainer = styled(Flex)`
   align-items: center;
-`
+`;
 
 const TokenCard = styled(BaseCard)`
   padding: 10px 8px 12px;
@@ -162,16 +175,16 @@ const TokenCard = styled(BaseCard)`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`
+`;
 
 const BalanceContainer = styled(FlexCol)`
   align-items: flex-end;
-`
+`;
 
 type RatioRowProps = {
-  lText: string | JSX.Element
-  rText: string | JSX.Element
-}
+  lText: string | JSX.Element;
+  rText: string | JSX.Element;
+};
 
 const RatioRow = ({ lText, rText }: RatioRowProps) => {
   return (
@@ -179,8 +192,8 @@ const RatioRow = ({ lText, rText }: RatioRowProps) => {
       <Text16>{lText}</Text16>
       <Text16>{rText}</Text16>
     </FlexRow>
-  )
-}
+  );
+};
 
 const InfoCard = styled(BaseCard)`
   display: flex;
@@ -188,12 +201,12 @@ const InfoCard = styled(BaseCard)`
   padding: 10px 20px;
   gap: 10px;
   margin-bottom: 35px;
-`
+`;
 
 const SeparateLine = styled.div`
   background: rgba(130, 130, 149, 0.3);
   height: 1px;
-`
+`;
 
 const ErrorContainer = styled(FlexItemsCenter)`
   margin: 10px 0;
@@ -202,4 +215,17 @@ const ErrorContainer = styled(FlexItemsCenter)`
   gap: 14px;
   background: #ff9ba7;
   color: ${({ theme }) => theme.colors.gray900};
-`
+`;
+
+const InputContainer = styled(Flex)`
+  justify-content: flex-end;
+  input {
+    width: 20%;
+  }
+`;
+const MaxButton = styled(BaseButton)`
+  color: ${({ theme }) => theme.colors.cyan500};
+  font-weight: 700;
+  background: unset;
+  border: unset;
+`;
