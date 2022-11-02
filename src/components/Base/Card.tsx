@@ -5,3 +5,5 @@ export const BaseCard = styled.div`
   border-radius: 5px;
   border: 1px solid ${({ theme }) => theme.colors.gray900};
 `;
+
+export default BaseCard;

@@ -16,6 +16,7 @@
         "max-lines": [
             "error",
             600
-        ]
+        ],
+        "react/jsx-key": "off"
     }
 }

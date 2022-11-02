@@ -15,11 +15,12 @@ const BaseButton = styled.button`
 `;
 
 const NetWorkButton = styled(BaseButton)`
+  color: ${({ theme }) => theme.colors.white};
   background: ${({ theme }) => theme.colors.bgNavy};
   box-shadow: ${({ theme }) => theme.colors.header};
   gap: 5px;
 
-  width: 160px;
+  width: 100%;
   height: 44px;
 
   span {
@@ -31,7 +32,8 @@ const NetWorkButton = styled(BaseButton)`
 `;
 
 const Button = styled.button<ButtonProps>`
-  padding: 10px, 16px;
+  cursor: pointer;
+  padding: 10px 16px;
   height: 44px;
   width: 160px;
 
@@ -51,10 +53,6 @@ const Button = styled.button<ButtonProps>`
       padding: 10px;
       width: 44px;
     `}
-
-  background:
-    linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-    linear-gradient(311.52deg, #3D464C -36.37%, #131619 62.81%);
 
   border: 1px solid #8282954d;
   border-radius: 4px;

@@ -5,11 +5,12 @@ export const Text = styled.span<{
   size?: number;
   fontWeight?: number;
   lineHeight?: string;
+  textTransform?: boolean;
 }>`
-  color: ${({ color, theme }) => color || theme.colors.white};
   font-size: ${({ size }) => size || 12}px;
   ${({ fontWeight }) => fontWeight && `font-weight: ${fontWeight};`}
   ${({ lineHeight }) => lineHeight && `line-height: ${lineHeight};`}
+  ${({ color }) => color && `color: ${color};`}
   text-transform: capitalize;
 `;
 
