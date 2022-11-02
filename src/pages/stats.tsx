@@ -4,8 +4,7 @@ import React from 'react';
 import Head from 'next/head';
 import Layout from '@/components/layout';
 import { Title, Text, Text12 } from '@/components/Base/Text';
-import { FlexCol, Flex, FlexRow } from '@/components/Base/Div';
-import PositionTable from '@/section/Positions/PositionTable';
+import { FlexCol, Flex } from '@/components/Base/Div';
 import { BaseCard } from '@/components/Base/Card';
 import Wallet from '@/assets/png/stats/wallet.png';
 import Percent from '@/assets/png/stats/percent.png';
@@ -48,14 +47,14 @@ const PositionPage = (): JSX.Element => {
               <StatCard
                 width="50%"
                 src={Percent}
-                title="Total Loans to Date"
-                subtitle="5"
+                title="Interest Rate"
+                subtitle="0.25%"
               />
               <StatCard
                 width="50%"
                 src={Chart}
                 title="Total Loans to Date"
-                subtitle="5"
+                subtitle="125%"
               />
             </Flex>
           </LeftPanel>
