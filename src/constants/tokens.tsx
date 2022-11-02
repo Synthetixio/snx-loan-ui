@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import { StaticImageData } from 'next/image';
 import WETHLogo from '@/assets/png/weth.png';
 import sUSDLogo from '@/assets/png/sUSD.png';
-import sETHLogo from '@/assets/png/seth.png';
+import sETHLogo from '@/assets/png/sETH.png';
 import ETHLogo from '@/assets/png/currencies/eth.png';
 
 export type CurrencyKey = string;
