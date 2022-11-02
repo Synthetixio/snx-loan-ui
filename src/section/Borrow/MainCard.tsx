@@ -14,7 +14,7 @@ import TokenSelector from '@/components/TokenSelector';
 import useSynthetixQueries, { GasPrice } from '@synthetixio/queries';
 import Connector from '@/containers/connector/Connector';
 import Balance from '@/components/Balance';
-import { calculateLoanCRatio } from '@/components/ActionPanel/utils';
+import { calculateLoanCRatio, calcSafeMaxCRatio as calcSafeMaxDebtAmount } from '@/components/ActionPanel/utils';
 import Loans from '@/containers/Loans';
 import SubmitButton from './components/SubmitButton';
 import { getSafeMinCRatioBuffer } from './utils';
@@ -22,6 +22,8 @@ import { ethers } from 'ethers';
 import { useQuery } from 'react-query';
 import generateWei from '@/utils/wei';
 import { BaseButton } from '@/components/Base/Button';
+import { useETHBalance, useERC20Balance } from '@/hooks/useBalance';
+import {formatPercent} from '@/utils/formatters/number';
 
 export default function MainCard() {
   const { synthetixjs, isWalletConnected } = Connector.useContainer();
@@ -79,6 +81,14 @@ export default function MainCard() {
     errorMsg = `INSUFFICIENT COLLATERAL TO BORROW`;
   }
 
+  const { balanceWei: ethBalance } = useETHBalance();
+  const safeMaxDebtAmount = calcSafeMaxDebtAmount(
+    exchangeRates,
+    collateralWei,
+    debtToken.name,
+    safeMinCratio
+  )
+
   return (
     <Container>
       <div>
@@ -92,7 +102,7 @@ export default function MainCard() {
         />
         <BalanceContainer>
           <InputContainer>
-            {/* <MaxButton>Max</MaxButton> */}
+            <MaxButton onClick={() => setCollateralInput(ethBalance.toString(2))}>Max</MaxButton>
             <NumericInput
               value={collateralInput}
               placeholder="0.00"
@@ -106,6 +116,7 @@ export default function MainCard() {
         <ArrowDown size={32} color="#9999AC" />
       </IconArrow>
       <ActionPanel
+        onSetMaxAmount={() => setDebtInput(safeMaxDebtAmount.toString(4))}
         tokenList={[sUSD, sETH]}
         errorMsg={errorMsg}
         onGasChange={setGasPrice}
