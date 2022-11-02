@@ -12,8 +12,15 @@ const SubmitButton = ({
   onClick,
   disabled,
 }: SubmitButtonProps) => {
-  const { connectWallet } = Connector.useContainer();
+  const { connectWallet, walletConnectedToUnsupportedNetwork } = Connector.useContainer();
   const getState = () => {
+    if (walletConnectedToUnsupportedNetwork) {
+      return {
+        disabled: true,
+        msg: `Please Swith To Optimism or Mainnet`,
+        onClick: () => console.log('change network')
+      }
+    }
     if (!isWalletConnected) {
       return {
         disabled: false,
