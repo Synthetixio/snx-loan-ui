@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import styled from 'styled-components';
 import Connector from '@/containers/connector';
 import { wei } from '@synthetixio/wei';
+
 import { Flex } from '@/components/Base/Div';
 import { SideText } from '@/components/Base/Text';
 
@@ -148,4 +149,7 @@ const ERC20: React.FC<ERC20Props> = ({ asset }) => {
 const Container = styled(Flex)`
   align-items: center;
   gap: 5px;
+  ${SideText}{
+    text-transform: unset;
+  }
 `;

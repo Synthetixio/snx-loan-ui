@@ -34,6 +34,7 @@ export interface ActionPanelProps extends TokenSelectorProps {
   errorMsg?: string;
   disableInput?: boolean;
   onSetMaxAmount?(): void;
+  safeMinCratio: Wei;
 }
 
 const ActionPanel = ({
@@ -49,6 +50,7 @@ const ActionPanel = ({
   errorMsg,
   disableInput = false,
   onSetMaxAmount,
+  safeMinCratio,
 }: ActionPanelProps) => {
   const { isL2 } = Connector.useContainer();
   const { issueFeeRate, interestRate, minCRatio } = Loans.useContainer();
@@ -61,8 +63,6 @@ const ActionPanel = ({
   const cRatioInfoContent = `Ensure your position stays above ${formatPercent(
     minCRatio
   )} to prevent liquidation.`;
-
-  const { balance: tokenBalance } = useERC20Balance(activeToken.name);
 
   return (
     <>
@@ -108,7 +108,7 @@ const ActionPanel = ({
           rText={
             <CRatio
               cRatio={cRatio}
-              minCRatio={minCRatio}
+              minCRatio={safeMinCratio}
               newCRatio={newCRatio}
             />
           }

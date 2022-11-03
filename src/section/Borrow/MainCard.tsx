@@ -22,8 +22,7 @@ import { ethers } from 'ethers';
 import { useQuery } from 'react-query';
 import generateWei from '@/utils/wei';
 import { BaseButton } from '@/components/Base/Button';
-import { useETHBalance, useERC20Balance } from '@/hooks/useBalance';
-import {formatPercent} from '@/utils/formatters/number';
+import { useETHBalance } from '@/hooks/useBalance';
 
 export default function MainCard() {
   const { synthetixjs, isWalletConnected } = Connector.useContainer();
@@ -126,6 +125,7 @@ export default function MainCard() {
         activeToken={debtToken}
         onClick={setDebtToken}
         onChange={setDebtInput}
+        safeMinCratio={safeMinCratio}
       />
       <SubmitButton
         disabled={!!errorMsg}
