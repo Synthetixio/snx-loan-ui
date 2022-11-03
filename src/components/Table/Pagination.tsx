@@ -1,11 +1,12 @@
-import styled from 'styled-components';
-import { ChevronLeft, ChevronRight } from 'react-feather';
-import { Flex } from '@/components/Base/Div';
-import { Text } from '@/components/Base/Text';
+import styled from "styled-components";
+import { ChevronLeft, ChevronRight } from "react-feather";
+import { Flex } from "@/components/Base/Div";
+import { Text } from "@/components/Base/Text";
 
 type PaginationProps = {
   pageIndex: number;
   pageCount: number;
+  pageSize: number;
   canNextPage: boolean;
   canPreviousPage: boolean;
   nextPage(): void;
@@ -14,8 +15,9 @@ type PaginationProps = {
 };
 
 const Pagination = ({
-  pageIndex = 5,
+  pageIndex = 0,
   pageCount,
+  pageSize,
   canNextPage,
   canPreviousPage,
   nextPage,
@@ -25,6 +27,10 @@ const Pagination = ({
   const getButtonColor = (isAbled: boolean): string => {
     return isAbled ? `#fff` : `#6c6c7e`;
   };
+
+  const itemIndex = `${pageIndex === 0 ? 1 : pageIndex * 5} - ${
+    (pageIndex + 1) * pageSize
+  }`;
   return (
     <Container>
       <LeftPanel>
@@ -32,7 +38,7 @@ const Pagination = ({
           Show rows per page
         </Text>
         <select
-          value={pageIndex}
+          value={pageSize}
           onChange={(e) => setPageSize(Number(e.target.value))}
         >
           {[5, 10, 20, 25].map((pageSize) => {
@@ -46,8 +52,8 @@ const Pagination = ({
       </LeftPanel>
       <RightPanel>
         <div>
-          <Text color="#6C6C7E">1-5 </Text>
-          <Text color="#9999AC">of {pageCount}</Text>
+          <Text color="#6C6C7E">{itemIndex} </Text>
+          <Text color="#9999AC">of {pageCount * 5}</Text>
         </div>
         <Flex>
           <ArrowButton disabled={!canPreviousPage} onClick={previousPage}>

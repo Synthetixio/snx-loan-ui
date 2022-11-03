@@ -1,12 +1,12 @@
-import styled, { css } from 'styled-components';
-import { Text12, Text, SubText } from '@/components/Base/Text';
-import { FlexRowCentered, FlexCol } from '@/components/Base/Div';
-import Table from '@/components/Table/ReactTable';
-import { useBoolean } from 'usehooks-ts';
-import { ChevronDown } from 'react-feather';
-import Loans from '@/containers/Loans';
-import { wei } from '@synthetixio/wei';
-import LoanCell from './LoanCell';
+import styled, { css } from "styled-components";
+import { Text12, Text, SubText } from "@/components/Base/Text";
+import { FlexRowCentered, FlexCol } from "@/components/Base/Div";
+import Table from "@/components/Table/ReactTable";
+import { useBoolean } from "usehooks-ts";
+import { ChevronDown } from "react-feather";
+import Loans from "@/containers/Loans";
+import { wei } from "@synthetixio/wei";
+import LoanCell from "./LoanCell";
 
 const TogglePanel = () => {
   const { value: isActive, toggle } = useBoolean(false);
@@ -86,7 +86,14 @@ const PositionTable = (): JSX.Element => {
     },
   ];
 
-  return <Table columns={columns} data={closedLoans} />;
+  return (
+    <Table
+      pageSize={5}
+      showPagination={true}
+      columns={columns}
+      data={[...closedLoans, ...closedLoans]}
+    />
+  );
 };
 
 export default TogglePanel;
@@ -114,10 +121,6 @@ const AmountCell = ({
     </FlexCol>
   );
 };
-
-const Loan = styled(FlexRowCentered)`
-  gap: 7px;
-`;
 
 const ManageButton = styled.button`
   background: ${({ theme }) => theme.colors.gray900};
