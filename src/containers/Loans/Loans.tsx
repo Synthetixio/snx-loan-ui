@@ -77,10 +77,47 @@ function Container() {
     return { ...loan, id };
   };
 
+  const loans2 = [
+    {
+        "id": "0x278-sETH",
+        "hasPartialLiquidations": true,
+        "currency": "sUSD",
+        "createdAt": "1642799819",
+        "collateralMinted": "sETH",
+        "collateralAmount": "0.2522495040380825",
+        "closedAt": null,
+        "amount": "76.252791762343264303",
+        "txHash": "0x81911f7edbc99f7a7cd3c758f432afd89ef8f107df9568b62cd83f30dff1b690"
+      },
+      {
+        "id": "0x283-sETH",
+        "hasPartialLiquidations": false,
+        "currency": "sUSD",
+        "createdAt": "1643177100",
+        "collateralMinted": "sETH",
+        "collateralAmount": "3",
+        "closedAt": null,
+        "amount": "1200",
+        "txHash": "0x735edb78bb913024992735932e58e46a5bbf20d4e0d9c4d50bcc0a2401d3d217"
+      },
+      {
+        "id": "0x28f-sETH",
+        "hasPartialLiquidations": true,
+        "currency": "sUSD",
+        "createdAt": "1643561289",
+        "collateralMinted": "sETH",
+        "collateralAmount": "0.00771753360846421",
+        "closedAt": null,
+        "amount": "6.050312522582003999",
+        "txHash": "0xb1051263d8b85f9d85fd35e71824f7a3fc41cd8b80a7d825d2d5eb5859f463de"
+      }
+  ]
+
   const subgraphOpenLoansKey = subgraphOpenLoansQuery.data
     ? JSON.stringify(
         subgraphOpenLoansQuery.data
           .filter((loan) => loan.isOpen)
+          .concat(loans2)
           .map(replaceId),
       )
     : ``;
