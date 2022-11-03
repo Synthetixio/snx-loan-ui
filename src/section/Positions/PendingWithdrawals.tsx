@@ -1,11 +1,11 @@
-import styled from 'styled-components';
-import { BaseCard } from '@/components/Base/Card';
-import { Text } from '@/components/Base/Text';
-import { FlexRow, FlexCol } from '@/components/Base/Div';
-import ReactTable from '@/components/Table/ReactTable';
-import Loans from '@/containers/Loans';
-import { wei } from '@synthetixio/wei';
-import useSynthetixQueries from '@synthetixio/queries';
+import styled from "styled-components";
+import { BaseCard } from "@/components/Base/Card";
+import { Text } from "@/components/Base/Text";
+import { FlexRow, FlexCol } from "@/components/Base/Div";
+import ReactTable from "@/components/Table/ReactTable";
+import Loans from "@/containers/Loans";
+import { wei } from "@synthetixio/wei";
+import useSynthetixQueries from "@synthetixio/queries";
 
 const PendingWithdrawals = () => {
   const data = [{}, {}].map(() => ({
@@ -27,7 +27,7 @@ const PendingWithdrawals = () => {
       async onSuccess() {
         await reloadPendingWithdrawals();
       },
-    },
+    }
   );
 
   const claimPendingWithdrawals = () => {
@@ -61,13 +61,22 @@ const PendingWithdrawals = () => {
     <Container>
       <Text size={20}>Pending Withdrawals</Text>
       <TotalClaim>
-        <FlexCol>
-          <Text size={16}>Total to claim</Text>
-          <Text size={18}>{wei(pendingWithdrawals).toString(2)} ETH</Text>
-        </FlexCol>
-        <ClaimButton
-          disabled={pendingWithdrawals.eq(0)}
-        onClick={claimPendingWithdrawals}>Claim</ClaimButton>
+        {pendingWithdrawals.gt(0) ? (
+          <>
+            <FlexCol>
+              <Text size={16}>Total to claim</Text>
+              <Text size={18}>{wei(pendingWithdrawals).toString(2)} ETH</Text>
+            </FlexCol>
+            <ClaimButton
+              disabled={pendingWithdrawals.eq(0)}
+              onClick={claimPendingWithdrawals}
+            >
+              Claim
+            </ClaimButton>
+          </>
+        ) : (
+          <Text size={16}> You have no pending withdrawals. </Text>
+        )}
       </TotalClaim>
       {/* <ReactTable */}
       {/*   columns={columns} */}
