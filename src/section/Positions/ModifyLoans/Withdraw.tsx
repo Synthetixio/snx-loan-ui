@@ -4,6 +4,7 @@ import Loans from '@/containers/Loans';
 import useSynthetixQueries from '@synthetixio/queries';
 import { ActionProps } from './type';
 import { safeWei } from '@/utils/wei';
+import { getSafeMinCRatioBuffer } from './helper'
 
 import ActionPanel from '@/components/ActionPanel';
 import ActionButton from '@/components/ActionButton';
@@ -45,10 +46,15 @@ const Withdraw: React.FC<ActionProps> = ({
     errorMsg = `C-Ratio is too low`;
   }
 
+  const safeMinCratio = minCRatio
+    ? minCRatio.add(getSafeMinCRatioBuffer(loan.currency, loan.collateralAsset))
+    : wei(0)
+
   return (
     <>
       <ActionPanel
         {...{
+          safeMinCratio,
           errorMsg,
           tokenList: [],
           onChange,

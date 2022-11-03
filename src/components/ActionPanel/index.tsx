@@ -34,7 +34,7 @@ export interface ActionPanelProps extends TokenSelectorProps {
   errorMsg?: string;
   disableInput?: boolean;
   onSetMaxAmount?(): void;
-  safeMinCratio: Wei;
+  safeMinCratio?: Wei;
 }
 
 const ActionPanel = ({
@@ -108,7 +108,7 @@ const ActionPanel = ({
           rText={
             <CRatio
               cRatio={cRatio}
-              minCRatio={safeMinCratio}
+              minCRatio={safeMinCratio || minCRatio}
               newCRatio={newCRatio}
             />
           }
