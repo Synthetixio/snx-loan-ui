@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import useSynthetixQueries, { GasPrice } from '@synthetixio/queries'
 import { Text12, Text, SubText } from '@/components/Base/Text'
 import { FlexRowCentered, FlexCol } from '@/components/Base/Div'
 import Table from '@/components/Table/ReactTable'
@@ -11,7 +10,7 @@ import LoanCell from './LoanCell'
 import { loanState } from '@/store/loan'
 import { useRecoilState } from 'recoil'
 import { Loan } from '@/containers/Loans/types'
-import { calcLiquidationPrice } from '@/components/ActionPanel/utils'
+import useLiquidationPrice from '@/hooks/useLiquidationPrice'
 
 const HeaderText = styled(Text12)`
   color: ${({ theme }) => theme.colors.gray700};
@@ -40,14 +39,7 @@ const AmountCell = ({
 const PositionTable = (): JSX.Element => {
   const { loans } = Loans.useContainer()
   const [_, setLoan] = useRecoilState(loanState)
-  const { useExchangeRatesQuery } = useSynthetixQueries()
-  const exchangeRatesQuery = useExchangeRatesQuery()
-  const exchangeRates = exchangeRatesQuery.data || null
-  const { minCRatio } = Loans.useContainer()
-  const { liquidationPrice, ethPrice } = calcLiquidationPrice(
-    exchangeRates,
-    minCRatio
-  )
+  const { liquidationPrice, ethPrice } = useLiquidationPrice();
 
   const columns = [
     {
@@ -66,13 +58,13 @@ const PositionTable = (): JSX.Element => {
     {
       accessor: `amount`,
       Cell: ({ row }: any) => {
-        const { amount, collateral, currency } = row.original
+        const { amount, collateral, currency } = row.original;
         return (
           <AmountCell
             title={`${wei(amount).toString(2)} ${currency}`}
             subtitle={`Collateral: ${wei(collateral).toString(2)} ETH`}
           />
-        )
+        );
       },
       Header: <HeaderText>Amount</HeaderText>,
       width: 145,
@@ -117,6 +109,7 @@ const PositionTable = (): JSX.Element => {
       width: 245,
     },
   ]
+  
 
   return (
     <Container>

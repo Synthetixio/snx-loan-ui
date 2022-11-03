@@ -21,6 +21,7 @@ import ActionCard from "@/section/Positions/ActionCard";
 import { formatPercent, formatString } from "@/utils/formatters/number";
 import { useRecoilState } from "recoil";
 import { loanState } from "@/store/loan";
+import useLiquidationPrice from "@/hooks/useLiquidationPrice";
 
 const Cell = ({
   width = `100%`,
@@ -58,6 +59,7 @@ export default function PostPage() {
   const router = useRouter();
   const id = router.query.id as string;
   const [loan] = useRecoilState(loanState);
+  const { ethPrice, liquidationPrice } = useLiquidationPrice();
   if (!loan) {
     return <>Loan Wasnt found, Please return the index page</>;
   }
@@ -128,13 +130,13 @@ export default function PostPage() {
                   width="33.3%"
                   title="ETH Price"
                   toolTipContent="hello world"
-                  content="$4200"
+                  content={`$ ${ethPrice.toString(2)}`}
                 />
                 <Cell
                   width="33.3%"
                   title="Liquidation Price"
                   toolTipContent="hello world"
-                  content="$690"
+                  content={`$ ${liquidationPrice.toString(2)}`}
                 />
                 <Cell
                   width="33.3%"
