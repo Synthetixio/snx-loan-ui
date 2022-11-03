@@ -107,7 +107,6 @@ export const Table: FC<TableProps> = ({
     usePagination,
     useFlexLayout
   );
-  console.log(data);
 
   useEffect(() => {
     setHiddenColumns(hiddenColumns);

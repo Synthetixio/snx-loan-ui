@@ -90,7 +90,7 @@ const PositionTable = (): JSX.Element => {
     <Table
       showPagination={true}
       columns={columns}
-      data={[...closedLoans, ...closedLoans]}
+      data={closedLoans}
     />
   );
 };
@@ -122,6 +122,7 @@ const AmountCell = ({
 };
 
 const ManageButton = styled.button`
+  cursor: disabled;
   background: ${({ theme }) => theme.colors.gray900};
   width: 80px;
   height: 36px;
