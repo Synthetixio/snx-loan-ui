@@ -18,6 +18,8 @@ html {
 body {
   height: 100%;
   background: right/contain no-repeat url('../../assets/svg/background.svg');
+  background-position-x: right;
+  background-position-y: top;
 }
 
 a {
