@@ -35,7 +35,7 @@ const PositionTable = (): JSX.Element => {
       accessor: `loan`,
       Cell: (props: any) => (
         <LoanCell
-          id={props.row.original.id}
+          id={String(Number(props.row.original.id))}
           debtToken={props.row.original.currency}
           collateralToken={`ETH`}
         />
