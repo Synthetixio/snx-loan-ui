@@ -35,7 +35,6 @@ type TableProps = {
   isLoading?: boolean;
   noResultsMessage?: React.ReactNode;
   showPagination?: boolean;
-  // pageSize?: number | null
   hiddenColumns?: string[];
   hideHeaders?: boolean;
   highlightRowsOnHover?: boolean;
@@ -55,7 +54,6 @@ export const Table: FC<TableProps> = ({
   palette = `primary`,
   isLoading = false,
   showPagination = false,
-  // pageSize = null,
   hiddenColumns = [],
   hideHeaders,
   highlightRowsOnHover,

@@ -53,7 +53,7 @@ const Pagination = ({
       <RightPanel>
         <div>
           <Text color="#6C6C7E">{itemIndex} </Text>
-          <Text color="#9999AC">of {pageCount * 5}</Text>
+          <Text color="#9999AC">of {(pageCount === 0 ? 1 : pageCount) * 5}</Text>
         </div>
         <Flex>
           <ArrowButton disabled={!canPreviousPage} onClick={previousPage}>

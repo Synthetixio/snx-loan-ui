@@ -111,6 +111,7 @@ const PositionTable = (): JSX.Element => {
   return (
     <Container>
       <Table
+        showPagination={true}
         noResultsMessage={<NoResult>You have no active loans.</NoResult>}
         columns={columns}
         data={loans}

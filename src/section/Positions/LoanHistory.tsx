@@ -138,6 +138,7 @@ const Container = styled(FlexCol)<{ active: boolean }>`
 
   .react-table {
     border: unset;
+    min-height: 400px;
   }
 `;
 
