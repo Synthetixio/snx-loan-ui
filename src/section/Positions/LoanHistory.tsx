@@ -88,7 +88,6 @@ const PositionTable = (): JSX.Element => {
 
   return (
     <Table
-      pageSize={5}
       showPagination={true}
       columns={columns}
       data={[...closedLoans, ...closedLoans]}
