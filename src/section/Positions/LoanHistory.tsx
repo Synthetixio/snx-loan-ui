@@ -91,6 +91,7 @@ const PositionTable = (): JSX.Element => {
       showPagination={true}
       columns={columns}
       data={closedLoans}
+      noResultsMessage={<NoResult>You have no loan History</NoResult>}
     />
   );
 };
@@ -105,6 +106,12 @@ const HeaderText = styled(Text12)`
 const InterestRate = styled(FlexRowCentered)`
   width: 100%;
 `;
+
+const NoResult = styled(FlexRowCentered)`
+  padding: 20px 0;
+  align-item: center;
+  justify-content: center;
+`
 
 const AmountCell = ({
   title,
