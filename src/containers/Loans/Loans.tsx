@@ -1,16 +1,16 @@
-import { createContainer } from 'unstated-next';
-import { useMemo, useEffect, useState } from 'react';
-import { BigNumber, ethers } from 'ethers';
+import { createContainer } from "unstated-next";
+import { useMemo, useEffect, useState } from "react";
+import { BigNumber, ethers } from "ethers";
 
-import Connector from '@/containers/connector';
-import { sleep } from '@/utils/promise';
-import getOpenLoans from './getOpenLoans';
-import { Loan } from './types';
-import getLoan from './getLoan';
+import Connector from "@/containers/connector";
+import { sleep } from "@/utils/promise";
+import getOpenLoans from "./getOpenLoans";
+import { Loan } from "./types";
+import getLoan from "./getLoan";
 
-import useSynthetixQueries, { LoanResult } from '@synthetixio/queries';
-import { useQuery } from 'react-query';
-import { wei } from '@synthetixio/wei';
+import useSynthetixQueries, { LoanResult } from "@synthetixio/queries";
+import { useQuery } from "react-query";
+import { wei } from "@synthetixio/wei";
 
 const SECONDS_IN_A_YR = 365 * 24 * 60 * 60;
 
@@ -30,7 +30,7 @@ function Container() {
   const [closedLoans, setClosedLoans] = useState<LoanResult[]>([]);
 
   const [pendingWithdrawals, setPendingWithdrawals] = useState(
-    BigNumber.from(`0`),
+    BigNumber.from(`0`)
   );
   const { subgraph } = useSynthetixQueries();
   const [ethLoanContract, ethLoanStateContract, collateralManagerContract] =
@@ -54,7 +54,7 @@ function Container() {
       const minCratio = await ethLoanContract.minCratio();
       return wei(minCratio);
     },
-    { enabled: Boolean(ethLoanContract) },
+    { enabled: Boolean(ethLoanContract) }
   );
 
   const subgraphOpenLoansQuery = subgraph.useGetLoans(
@@ -68,8 +68,9 @@ function Container() {
       collateralAmount: true,
       closedAt: true,
       amount: true,
+      txHash: true,
     },
-    { queryKey: [`getLoans`, isL2, walletAddress] },
+    { queryKey: [`getLoans`, isL2, walletAddress] }
   );
 
   const replaceId = (loan: LoanResult) => {
@@ -79,9 +80,7 @@ function Container() {
 
   const subgraphOpenLoansKey = subgraphOpenLoansQuery.data
     ? JSON.stringify(
-        subgraphOpenLoansQuery.data
-          .filter((loan) => loan.isOpen)
-          .map(replaceId),
+        subgraphOpenLoansQuery.data.filter((loan) => loan.isOpen).map(replaceId)
       )
     : ``;
   const closedLoanResult =
@@ -139,7 +138,7 @@ function Container() {
             loans[idx] = loan;
           } else {
             console.warn(
-              `unknown loan(id=${id.toString()}, owner=${owner.toString()})`,
+              `unknown loan(id=${id.toString()}, owner=${owner.toString()})`
             );
           }
           return loans;
@@ -164,7 +163,7 @@ function Container() {
       const onCollateralDeposited = async (
         owner: string,
         id: BigNumber,
-        amount: BigNumber,
+        amount: BigNumber
       ) => {
         setLoans((loans) =>
           loans.map((loan) => {
@@ -172,7 +171,7 @@ function Container() {
               return { ...loan, collateral: loan.collateral.add(amount) };
             }
             return loan;
-          }),
+          })
         );
         await updateLoan(owner, id);
       };
@@ -180,7 +179,7 @@ function Container() {
       const onCollateralWithdrawn = async (
         owner: string,
         id: BigNumber,
-        amount: BigNumber,
+        amount: BigNumber
       ) => {
         setLoans((loans) =>
           loans.map((loan) => {
@@ -188,7 +187,7 @@ function Container() {
               loan.collateral = loan.collateral.sub(amount);
             }
             return loan;
-          }),
+          })
         );
         await updateLoan(owner, id);
       };
@@ -197,7 +196,7 @@ function Container() {
         borrower: string,
         _repayer: string,
         id: BigNumber,
-        payment: BigNumber,
+        payment: BigNumber
       ) => {
         setLoans((loans) =>
           loans.map((loan) => {
@@ -205,7 +204,7 @@ function Container() {
               return { ...loan, amount: loan.amount.sub(payment) };
             }
             return loan;
-          }),
+          })
         );
         await updateLoan(borrower, id);
       };
@@ -213,7 +212,7 @@ function Container() {
       const onLoanDrawnDown = async (
         owner: string,
         id: BigNumber,
-        amount: BigNumber,
+        amount: BigNumber
       ) => {
         setLoans((loans) =>
           loans.map((loan) => {
@@ -221,7 +220,7 @@ function Container() {
               return { ...loan, amount: loan.amount.add(amount) };
             }
             return loan;
-          }),
+          })
         );
         await updateLoan(owner, id);
       };
@@ -247,14 +246,14 @@ function Container() {
       unsubs.push(() => loanContract.off(loanCreatedEvent, onLoanCreated));
       unsubs.push(() => loanContract.off(loanClosedEvent, onLoanClosed));
       unsubs.push(() =>
-        loanContract.off(collateralDepositedEvent, onCollateralDeposited),
+        loanContract.off(collateralDepositedEvent, onCollateralDeposited)
       );
       unsubs.push(() =>
-        loanContract.off(collateralWithdrawnEvent, onCollateralWithdrawn),
+        loanContract.off(collateralWithdrawnEvent, onCollateralWithdrawn)
       );
       unsubs.push(() => loanContract.off(loanDrawnDownEvent, onLoanDrawnDown));
       unsubs.push(() =>
-        loanContract.off(loanRepaymentMadeEvent, onLoanRepaymentMade),
+        loanContract.off(loanRepaymentMadeEvent, onLoanRepaymentMade)
       );
     };
 
@@ -299,9 +298,9 @@ function Container() {
     },
     {
       enabled: Boolean(
-        isAppReady && collateralManagerContract && ethLoanContract,
+        isAppReady && collateralManagerContract && ethLoanContract
       ),
-    },
+    }
   );
 
   // pending withdrawals
@@ -309,7 +308,7 @@ function Container() {
     ethLoanContract: ethers.Contract | null,
     isMounted: boolean,
     setPendingWithdrawals: (pw: BigNumber) => void,
-    address: string,
+    address: string
   ) => {
     if (!ethLoanContract) return;
     const pw = await ethLoanContract.pendingWithdrawals(address);
@@ -325,7 +324,7 @@ function Container() {
         ethLoanContract,
         true,
         setPendingWithdrawals,
-        walletAddress,
+        walletAddress
       );
     }
   };
@@ -338,7 +337,7 @@ function Container() {
         ethLoanContract,
         isMounted,
         setPendingWithdrawals,
-        walletAddress,
+        walletAddress
       );
     })();
     return () => {
