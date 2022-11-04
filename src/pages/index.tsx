@@ -8,7 +8,7 @@ export default function Home() {
     <div>
       <Head>
         <title>Synthetix Loans</title>
-        <mSyntheticeta name="description" content="Borrow Synths using other assets" />
+        <meta name="description" content="Borrow Synths using other assets" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>

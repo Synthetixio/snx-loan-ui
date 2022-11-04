@@ -72,14 +72,16 @@ export default function MainCard() {
     !debtWei.amount.eq(0) &&
     cRatio.lt(safeMinCratio);
   const hasInsufficientCollateral = collateralBalance.lt(minCollateralAmount);
+  const hasInsufficientBalance = collateralBalance.lt(collateralWei.amount)
   if (hasLowCollateralAmount) {
     errorMsg = `MINIMUM COLLATERAL IS ${minCollateralAmount.toString(2)}`;
   } else if (hasLowCratio) {
     errorMsg = `C-RATIO TOO LOW`;
   } else if (hasInsufficientCollateral) {
     errorMsg = `INSUFFICIENT COLLATERAL TO BORROW`;
+  } else if (hasInsufficientBalance) {
+    errorMsg = `INSUFFICIENT BALANCE`;
   }
-
   const { balanceWei: ethBalance } = useETHBalance();
   const safeMaxDebtAmount = calcSafeMaxDebtAmount(
     exchangeRates,
@@ -117,7 +119,7 @@ export default function MainCard() {
       <ActionPanel
         onSetMaxAmount={() => setDebtInput(safeMaxDebtAmount.toString(4))}
         tokenList={[sUSD, sETH]}
-        errorMsg={errorMsg}
+        errorMsg={(debtInput && collateralInput) ? errorMsg : ''}
         onGasChange={setGasPrice}
         optimismLayerOneFee={openTxn.optimismLayerOneFee}
         cRatio={cRatio}
