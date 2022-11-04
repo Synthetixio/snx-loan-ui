@@ -12,10 +12,10 @@ const PositionPage = (): JSX.Element => {
   return (
     <>
       <Head>
-        <title>Position</title>
+        <title>Positions</title>
       </Head>
       <Layout>
-        <Title>Position</Title>
+        <Title>Positions</Title>
         <Container>
           <LeftPanel>
             <PositionTable />
