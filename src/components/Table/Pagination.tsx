@@ -28,7 +28,7 @@ const Pagination = ({
     return isAbled ? `#fff` : `#6c6c7e`;
   };
 
-  const itemIndex = `${pageIndex === 0 ? 1 : pageIndex * 5} - ${
+  const itemIndex = `${pageIndex === 0 ? 1 : pageIndex * pageSize} - ${
     (pageIndex + 1) * pageSize
   }`;
   return (
@@ -53,7 +53,7 @@ const Pagination = ({
       <RightPanel>
         <div>
           <Text color="#6C6C7E">{itemIndex} </Text>
-          <Text color="#9999AC">of {(pageCount === 0 ? 1 : pageCount) * 5}</Text>
+          <Text color="#9999AC">of {(pageCount === 0 ? 1 : pageCount) * pageSize}</Text>
         </div>
         <Flex>
           <ArrowButton disabled={!canPreviousPage} onClick={previousPage}>
