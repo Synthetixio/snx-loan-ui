@@ -5,14 +5,19 @@ import Loans from "@/containers/Loans";
 import { getExchangeRatesForCurrencies } from "@/utils/currencies";
 import { Loan } from "@/containers/Loans/types";
 
-function useLiquidationPrice(loan: Loan) {
+function useLiquidationPrice(loan: Loan | undefined) {
   const { useExchangeRatesQuery } = useSynthetixQueries();
   const exchangeRatesQuery = useExchangeRatesQuery();
   const exchangeRates = exchangeRatesQuery.data || null;
   const { minCRatio } = Loans.useContainer();
 
+  if (!loan) {
+    return {
+      ethPrice: wei(0),
+      liquidationPrice: wei(0),
+    }
+  }
   const { collateral, amount, currency } = loan;
-
   const ethPrice = getExchangeRatesForCurrencies(
     exchangeRates,
     Synths.sETH,

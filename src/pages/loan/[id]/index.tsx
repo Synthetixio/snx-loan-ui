@@ -59,9 +59,10 @@ export default function PostPage() {
   const router = useRouter();
   const id = router.query.id as string;
   const [loan] = useRecoilState(loanState);
-  const { ethPrice, liquidationPrice } = useLiquidationPrice();
+  const { ethPrice, liquidationPrice } = useLiquidationPrice(loan);
   if (!loan) {
-    return <>Loan Wasnt found, Please return the index page</>;
+    // router.push('/position')
+    return <>Loan Wasnt found, Return the index page</>;
   }
 
   return (
