@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import Wei from "@synthetixio/wei";
 import { GasPrice } from "@synthetixio/queries";
 import { Text16, Text } from "@/components/Base/Text";
@@ -21,7 +20,6 @@ import type { TokenSelectorProps } from "@/components/TokenSelector";
 import AlertIcon from "@/assets/png/alert.png";
 import Image from "next/image";
 import InfoTooltip from "../Tooltip";
-import { useERC20Balance } from "@/hooks/useBalance";
 import { BaseButton } from '@/components/Base/Button';
 
 export interface ActionPanelProps extends TokenSelectorProps {
@@ -108,7 +106,7 @@ const ActionPanel = ({
           rText={
             <CRatio
               cRatio={cRatio}
-              minCRatio={safeMinCratio || minCRatio}
+              minCRatio={minCRatio}
               newCRatio={newCRatio}
             />
           }
