@@ -109,7 +109,7 @@ const ActionPanel = ({
         />
         <RatioRow lText="Min C-Ratio" rText={formatPercent(minCRatio)} />
         <SeparateLine />
-        <RatioRow lText="Borrow APY" rText={formatPercent(interestRate)} />
+        <RatioRow lText="Interest Rate" rText={formatPercent(interestRate)} />
         <RatioRow lText="Issuance Fee" rText={formatPercent(issueFeeRate)} />
         <SeparateLine />
         <RatioRow
