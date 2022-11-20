@@ -20,7 +20,7 @@ import type { TokenSelectorProps } from "@/components/TokenSelector";
 import AlertIcon from "@/assets/png/alert.png";
 import Image from "next/image";
 import InfoTooltip from "../Tooltip";
-import { BaseButton } from '@/components/Base/Button';
+import { BaseButton } from "@/components/Base/Button";
 
 export interface ActionPanelProps extends TokenSelectorProps {
   value: string;
@@ -72,11 +72,7 @@ const ActionPanel = ({
         />
         <BalanceContainer>
           <InputContainer>
-            {
-              activeToken.name === 'sETH' &&
-              onSetMaxAmount &&
-              <MaxButton onClick={onSetMaxAmount}>Max</MaxButton>
-            }
+            <MaxButton onClick={onSetMaxAmount}>SAFE MAX</MaxButton>
             <NumericInput
               disabled={disableInput}
               onChange={onChange}
