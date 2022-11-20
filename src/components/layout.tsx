@@ -24,7 +24,6 @@ const Header = styled.header`
 const Logo = styled(FlexRowCentered)`
   font-size: 14px;
   font-weight: 400;
-  font-family: ${(props) => props.theme.fonts.lustra};
   width: 104px;
   margin-right: 70px;
 `;
