@@ -1,43 +1,44 @@
-import styled from 'styled-components';
-import InfoCircle from '@/assets/svg/info-circle.svg';
-import Image from 'next/image';
-import { Tooltip } from 'react-tippy';
+import styled from "styled-components";
+import InfoCircle from "@/assets/svg/info-circle.svg";
+import Image from "next/image";
+import ReactTooltip from "react-tooltip";
 
-const TooltipContent = styled.div`
-  text-align: center;
-  background: #424251;
-  padding: 8px;
-  border-radius: 4px;
-  margin-bottom: 20px;
-
-  &:after {
-    content: '';
-    position: absolute;
-    top: 72%;
-    left: 50%;
-    margin-left: -8px;
-    border-width: 8px;
-    border-style: solid;
-    border-color: #424251 transparent transparent transparent;
+const TooltipContainer = styled.div`
+  .float-content {
+    width: 320px;
+    text-align: center;
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 20px;
   }
 `;
 
 type InfoTooltipType = {
   content: string;
+  id?: string;
 };
 
 export const InfoTooltip = (props: InfoTooltipType) => {
-  const { content } = props;
+  const { content, id = "tool-tip" } = props;
+  console.log(content);
   return (
-    // @ts-ignore
-    <Tooltip
-      html={<TooltipContent>{content}</TooltipContent>}
-      position="top"
-      trigger="mouseenter"
-      arrow={true}
-    >
-      <Image src={InfoCircle} alt="info-circle" width="10" height="10px" />
-    </Tooltip>
+    <TooltipContainer>
+      <Image
+        data-tip={content}
+        data-for={id}
+        src={InfoCircle}
+        alt="info-circle"
+        width="10"
+        height="10px"
+      />
+      <ReactTooltip
+        backgroundColor="#424251"
+        id={id}
+        effect="solid"
+        type="info"
+        className="float-content"
+      />
+    </TooltipContainer>
   );
 };
 

@@ -98,7 +98,7 @@ const ActionPanel = ({
           lText={
             <Flex gap={5}>
               C-Ratio
-              <InfoTooltip content={cRatioInfoContent} />
+              <InfoTooltip content={cRatioInfoContent} id="c-ratio"/>
             </Flex>
           }
           rText={
