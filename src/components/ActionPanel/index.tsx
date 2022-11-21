@@ -72,7 +72,6 @@ const ActionPanel = ({
         />
         <BalanceContainer>
           <InputContainer>
-            <MaxButton onClick={onSetMaxAmount}>SAFE MAX</MaxButton>
             <NumericInput
               disabled={disableInput}
               onChange={onChange}
@@ -80,7 +79,10 @@ const ActionPanel = ({
               placeholder="0.00"
             />
           </InputContainer>
-          <Balance asset={activeToken.name} />
+          <Flex>
+            <Balance asset={activeToken.name} />
+            <MaxButton onClick={onSetMaxAmount}>Max</MaxButton>
+          </Flex>
         </BalanceContainer>
       </TokenCard>
       {errorMsg && (
@@ -213,9 +215,6 @@ const ErrorContainer = styled(FlexItemsCenter)`
 
 const InputContainer = styled(Flex)`
   justify-content: flex-end;
-  input {
-    width: 20%;
-  }
 `;
 const MaxButton = styled(BaseButton)`
   color: ${({ theme }) => theme.colors.cyan500};
