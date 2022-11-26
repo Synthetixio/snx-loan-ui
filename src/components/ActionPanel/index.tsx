@@ -79,7 +79,9 @@ const ActionPanel = ({
           </InputContainer>
           <Flex>
             <Balance asset={activeToken.name} />
-            <MaxButton onClick={onSetMaxAmount}>Max</MaxButton>
+            {onSetMaxAmount && (
+              <MaxButton onClick={onSetMaxAmount}>Max</MaxButton>
+            )}
           </Flex>
         </BalanceContainer>
       </TokenCard>
@@ -96,7 +98,7 @@ const ActionPanel = ({
           lText={
             <Flex gap={5}>
               C-Ratio
-              <InfoTooltip content={cRatioInfoContent} id="c-ratio"/>
+              <InfoTooltip content={cRatioInfoContent} id="c-ratio" />
             </Flex>
           }
           rText={
