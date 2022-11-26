@@ -32,7 +32,6 @@ export interface ActionPanelProps extends TokenSelectorProps {
   errorMsg?: string;
   disableInput?: boolean;
   onSetMaxAmount?(): void;
-  safeMinCratio?: Wei;
 }
 
 const ActionPanel = ({
@@ -48,7 +47,6 @@ const ActionPanel = ({
   errorMsg,
   disableInput = false,
   onSetMaxAmount,
-  safeMinCratio,
 }: ActionPanelProps) => {
   const { isL2 } = Connector.useContainer();
   const { issueFeeRate, interestRate, minCRatio } = Loans.useContainer();
@@ -109,6 +107,7 @@ const ActionPanel = ({
             />
           }
         />
+        <RatioRow lText="Liquidation Price" rText={formatPercent(minCRatio)} />
         <RatioRow lText="Min C-Ratio" rText={formatPercent(minCRatio)} />
         <SeparateLine />
         <RatioRow lText="Interest Rate" rText={formatPercent(interestRate)} />

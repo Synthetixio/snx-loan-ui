@@ -8,7 +8,6 @@ import {
   FlexCol,
   FlexCenter,
   FlexRowCentered,
-  FlexRow,
 } from "@/components/Base/Div";
 import {
   DualCurrencyIcon,
@@ -16,7 +15,6 @@ import {
 } from "@/components/Currency/CurrencyIcon";
 import { BaseCard } from "@/components/Base/Card";
 import { InfoTooltip } from "@/components/Tooltip";
-import ActionHistory from "@/section/Positions/ActionHistory";
 import ActionCard from "@/section/Positions/ActionCard";
 import { formatPercent, formatString } from "@/utils/formatters/number";
 import { useRecoilState } from "recoil";
@@ -142,7 +140,6 @@ export default function PostPage() {
                 />
               </Row>
             </LoanDetail>
-            {/* <ActionHistory /> */}
           </FlexCol>
           <ActionCard loan={loan} />
         </Flex>
