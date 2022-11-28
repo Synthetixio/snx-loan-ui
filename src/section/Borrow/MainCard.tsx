@@ -26,6 +26,7 @@ import { useQuery } from "react-query";
 import generateWei from "@/utils/wei";
 import { BaseButton } from "@/components/Base/Button";
 import { useETHBalance } from "@/hooks/useBalance";
+import { useLiquidationPrice2 } from "@/hooks/useLiquidationPrice";
 
 export default function MainCard() {
   const { synthetixjs, isWalletConnected } = Connector.useContainer();
@@ -93,6 +94,12 @@ export default function MainCard() {
     safeMinCratio
   );
 
+  const liquidationPrice = useLiquidationPrice2(
+    collateralWei.amount,
+    debtWei.amount,
+    debtToken.name
+  );
+
   return (
     <Container>
       <div>
@@ -136,7 +143,7 @@ export default function MainCard() {
         activeToken={debtToken}
         onClick={setDebtToken}
         onChange={setDebtInput}
-        safeMinCratio={safeMinCratio}
+        liquidationPrice={liquidationPrice}
       />
       <SubmitButton
         disabled={!!errorMsg}

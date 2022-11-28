@@ -21,6 +21,7 @@ import AlertIcon from "@/assets/png/alert.png";
 import Image from "next/image";
 import InfoTooltip from "../Tooltip";
 import { BaseButton } from "@/components/Base/Button";
+import {formatDollar} from "@/utils/string";
 
 export interface ActionPanelProps extends TokenSelectorProps {
   value: string;
@@ -32,6 +33,7 @@ export interface ActionPanelProps extends TokenSelectorProps {
   errorMsg?: string;
   disableInput?: boolean;
   onSetMaxAmount?(): void;
+  liquidationPrice?: Wei;
 }
 
 const ActionPanel = ({
@@ -47,6 +49,7 @@ const ActionPanel = ({
   errorMsg,
   disableInput = false,
   onSetMaxAmount,
+  liquidationPrice,
 }: ActionPanelProps) => {
   const { isL2 } = Connector.useContainer();
   const { issueFeeRate, interestRate, minCRatio } = Loans.useContainer();
@@ -109,7 +112,12 @@ const ActionPanel = ({
             />
           }
         />
-        <RatioRow lText="Liquidation Price" rText={formatPercent(minCRatio)} />
+        {liquidationPrice && (
+          <RatioRow
+            lText="Liquidation Price"
+            rText={formatDollar(liquidationPrice?.toString(2))}
+          />
+        )}
         <RatioRow lText="Min C-Ratio" rText={formatPercent(minCRatio)} />
         <SeparateLine />
         <RatioRow lText="Interest Rate" rText={formatPercent(interestRate)} />
