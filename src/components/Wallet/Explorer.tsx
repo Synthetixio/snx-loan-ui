@@ -1,10 +1,13 @@
-import { ExternalLink as LinkIcon } from 'react-feather';
+import { ExternalLink as LinkIcon,} from 'react-feather';
+import Link from 'next/link'
 import ReactGA from 'react-ga4';
 import styled from 'styled-components';
 import { FC, HTMLProps } from 'react';
 
 import { SupportedChains } from '@/constants/chains';
 import { anonymizeLink } from './utils';
+import {useRecoilState} from 'recoil';
+import { networkState } from '@/store/wallet'
 
 function handleClickExternalLink(event: React.MouseEvent<HTMLAnchorElement>) {
   const { target, href } = event.currentTarget;
@@ -37,7 +40,6 @@ const StyledLink = styled.a`
 
   :focus {
     outline: none;
-    text-decoration: underline;
   }
 
   :active {
@@ -103,5 +105,19 @@ export const Explorer: FC<ExplorerProps> = ({ chainId, ENSName }) => {
     </AddressLink>
   );
 };
+
+type TxExplorerProps = {
+  txHash: string,
+  label?: string,
+  children?: JSX.Element,
+}
+
+export const TxExplorer: FC<TxExplorerProps> = ({ txHash, children}) => {
+  const [ network ] = useRecoilState(networkState)
+  
+  const href = `${ETHERSCAN_PREFIXES[network.id]}/tx/${txHash}`
+
+  return <ExternalLink href={href}>{children}</ExternalLink>
+}
 
 export default Explorer;
