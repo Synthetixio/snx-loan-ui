@@ -1,13 +1,14 @@
-import { wei } from '@synthetixio/wei';
-import { useRouter } from 'next/router';
-import Loans from '@/containers/Loans';
-import useSynthetixQueries from '@synthetixio/queries';
-import { ActionProps } from './type';
-import { safeWei } from '@/utils/wei';
-import { getSafeMinCRatioBuffer } from './helper'
+import { wei } from "@synthetixio/wei";
+import { useRouter } from "next/router";
+import Loans from "@/containers/Loans";
+import useSynthetixQueries from "@synthetixio/queries";
+import { ActionProps } from "./type";
+import { safeWei } from "@/utils/wei";
+import { getSafeMinCRatioBuffer } from "./helper";
 
-import ActionPanel from '@/components/ActionPanel';
-import ActionButton from '@/components/ActionButton';
+import ActionPanel from "@/components/ActionPanel";
+import ActionButton from "@/components/ActionButton";
+import { useLiquidationPrice2 } from "@/hooks/useLiquidationPrice";
 
 const Withdraw: React.FC<ActionProps> = ({
   loan,
@@ -35,7 +36,7 @@ const Withdraw: React.FC<ActionProps> = ({
         await reloadPendingWithdrawals();
         router.push(`/position`);
       },
-    },
+    }
   );
 
   const withdraw = async () => {
@@ -48,12 +49,19 @@ const Withdraw: React.FC<ActionProps> = ({
 
   const safeMinCratio = minCRatio
     ? minCRatio.add(getSafeMinCRatioBuffer(loan.currency, loan.collateralAsset))
-    : wei(0)
+    : wei(0);
+
+  const liquidationPrice = useLiquidationPrice2(
+    wei(loan.collateral.sub(withdrawalAmount.toBN())),
+    wei(loan.amount),
+    loan.currency
+  );
 
   return (
     <>
       <ActionPanel
         {...{
+          liquidationPrice,
           safeMinCratio,
           errorMsg,
           tokenList: [],
