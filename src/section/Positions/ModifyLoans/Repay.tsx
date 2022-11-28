@@ -1,11 +1,14 @@
-import ActionPanel from '@/components/ActionPanel';
-import ActionButton from '@/components/ActionButton';
-import useSynthetixQueries from '@synthetixio/queries';
-import { wei } from '@synthetixio/wei';
-import Connector from '@/containers/connector';
-import { safeWei } from '@/utils/wei';
-import { useRouter } from 'next/router';
-import { ActionProps } from './type';
+import ActionPanel from "@/components/ActionPanel";
+import ActionButton from "@/components/ActionButton";
+import useSynthetixQueries from "@synthetixio/queries";
+import { wei } from "@synthetixio/wei";
+import Connector from "@/containers/connector";
+import { safeWei } from "@/utils/wei";
+import { useRouter } from "next/router";
+import { ActionProps } from "./type";
+import useLiquidationPrice, {
+  useLiquidationPrice2,
+} from "@/hooks/useLiquidationPrice";
 
 const Repay = ({
   loan,
@@ -34,7 +37,7 @@ const Repay = ({
       onError: () => {
         console.error(`Something went wrong when repay the loan`);
       },
-    },
+    }
   );
 
   const repay = async () => {
@@ -47,9 +50,16 @@ const Repay = ({
     errorMsg = `consider closing the loan instead of full repayment`;
   }
 
+  const liquidationPrice = useLiquidationPrice2(
+    wei(loan.collateral),
+    wei(loan.amount.sub(valueWei.toBN())),
+    loan.currency
+  );
+
   return (
     <>
       <ActionPanel
+        liquidationPrice={liquidationPrice}
         errorMsg={errorMsg}
         value={value}
         onGasChange={onGasChange}

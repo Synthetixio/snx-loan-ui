@@ -67,9 +67,11 @@ const PositionTable = (): JSX.Element => {
       sortable: true,
     },
     {
-      accessor: `liquidationPrice`,
-      Cell: ({ row }: any) => <Text size={14}>N/A</Text>,
-      Header: <HeaderText>Liquidation Price</HeaderText>,
+      accessor: `closedAt`,
+      Cell: ({ row }: any) => <Text size={14}>
+        {(new Date(row.original.closedAt * 1000)).toLocaleString()}
+      </Text>,
+      Header: <HeaderText>Closed At</HeaderText>,
       width: 145,
     },
     {

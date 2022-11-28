@@ -29,7 +29,7 @@ const GasPriceDisplay: FC<{
     return (
       <>
         L2 Fees: {l2Fees.toNumber()} +{` `}
-        L1 Fees: {` E`}
+        L1 Fees: {` ≡`}
         {optimismLayerOneFee ? optimismLayerOneFee.toString(4) : 0}
       </>
     );

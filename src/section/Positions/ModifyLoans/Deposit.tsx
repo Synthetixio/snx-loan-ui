@@ -8,6 +8,10 @@ import { safeWei } from '@/utils/wei';
 import ActionPanel from '@/components/ActionPanel';
 import ActionButton from '@/components/ActionButton';
 
+import useLiquidationPrice, {
+    useLiquidationPrice2,
+} from "@/hooks/useLiquidationPrice";
+
 const Deposit: React.FC<ActionProps> = ({
   loan,
   newCRatio,
@@ -40,6 +44,12 @@ const Deposit: React.FC<ActionProps> = ({
     depositTxn.mutate();
   };
 
+  const liquidationPrice = useLiquidationPrice2(
+    wei(loan.collateral.add(depositAmount.toBN())),
+    wei(loan.amount),
+    loan.currency,
+  )
+
   return (
     <>
       <ActionPanel
@@ -52,6 +62,7 @@ const Deposit: React.FC<ActionProps> = ({
           activeToken,
           cRatio: wei(loan.cratio),
           newCRatio,
+          liquidationPrice,
           optimismLayerOneFee: depositTxn.optimismLayerOneFee,
         }}
       />

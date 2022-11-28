@@ -8,7 +8,6 @@ import {
   FlexCol,
   FlexCenter,
   FlexRowCentered,
-  FlexRow,
 } from "@/components/Base/Div";
 import {
   DualCurrencyIcon,
@@ -16,7 +15,6 @@ import {
 } from "@/components/Currency/CurrencyIcon";
 import { BaseCard } from "@/components/Base/Card";
 import { InfoTooltip } from "@/components/Tooltip";
-import ActionHistory from "@/section/Positions/ActionHistory";
 import ActionCard from "@/section/Positions/ActionCard";
 import { formatPercent, formatString } from "@/utils/formatters/number";
 import { useRecoilState } from "recoil";
@@ -33,7 +31,7 @@ const Cell = ({
   width?: string;
   title: string;
   content?: string;
-  toolTipContent: string;
+  toolTipContent?: string;
   html?: JSX.Element;
 }) => {
   return (
@@ -42,7 +40,7 @@ const Cell = ({
         <Text size={12} color="#9999AC">
           {title}
         </Text>
-        <InfoTooltip content={toolTipContent} />
+        {toolTipContent && <InfoTooltip content={toolTipContent} />}
       </FlexCenter>
       {html ? (
         <FlexCenter gap={8}>{html}</FlexCenter>
@@ -85,7 +83,6 @@ export default function PostPage() {
               <Row>
                 <Cell
                   width="50%"
-                  toolTipContent="Hello World"
                   title="Loan"
                   html={
                     <>
@@ -98,7 +95,6 @@ export default function PostPage() {
                 />
                 <Cell
                   width="50%"
-                  toolTipContent="hello world"
                   title="Collateral"
                   html={
                     <>
@@ -130,26 +126,22 @@ export default function PostPage() {
                 <Cell
                   width="33.3%"
                   title="ETH Price"
-                  toolTipContent="hello world"
                   content={`$ ${ethPrice.toString(2)}`}
                 />
                 <Cell
                   width="33.3%"
                   title="Liquidation Price"
-                  toolTipContent="hello world"
                   content={`$ ${liquidationPrice.toString(2)}`}
                 />
                 <Cell
                   width="33.3%"
                   title="Interest Rate"
-                  toolTipContent="hello world"
                   content="0.25%"
                 />
               </Row>
             </LoanDetail>
-            {/* <ActionHistory /> */}
           </FlexCol>
-          <ActionCard loan={loan}/>
+          <ActionCard loan={loan} />
         </Flex>
       </Layout>
     </>

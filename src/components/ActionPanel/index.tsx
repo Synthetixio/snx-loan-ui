@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import Wei from "@synthetixio/wei";
 import { GasPrice } from "@synthetixio/queries";
 import { Text16, Text } from "@/components/Base/Text";
@@ -21,8 +20,8 @@ import type { TokenSelectorProps } from "@/components/TokenSelector";
 import AlertIcon from "@/assets/png/alert.png";
 import Image from "next/image";
 import InfoTooltip from "../Tooltip";
-import { useERC20Balance } from "@/hooks/useBalance";
-import { BaseButton } from '@/components/Base/Button';
+import { BaseButton } from "@/components/Base/Button";
+import {formatDollar} from "@/utils/string";
 
 export interface ActionPanelProps extends TokenSelectorProps {
   value: string;
@@ -34,7 +33,7 @@ export interface ActionPanelProps extends TokenSelectorProps {
   errorMsg?: string;
   disableInput?: boolean;
   onSetMaxAmount?(): void;
-  safeMinCratio?: Wei;
+  liquidationPrice?: Wei;
 }
 
 const ActionPanel = ({
@@ -50,7 +49,7 @@ const ActionPanel = ({
   errorMsg,
   disableInput = false,
   onSetMaxAmount,
-  safeMinCratio,
+  liquidationPrice,
 }: ActionPanelProps) => {
   const { isL2 } = Connector.useContainer();
   const { issueFeeRate, interestRate, minCRatio } = Loans.useContainer();
@@ -74,11 +73,6 @@ const ActionPanel = ({
         />
         <BalanceContainer>
           <InputContainer>
-            {
-              activeToken.name === 'sETH' &&
-              onSetMaxAmount &&
-              <MaxButton onClick={onSetMaxAmount}>Max</MaxButton>
-            }
             <NumericInput
               disabled={disableInput}
               onChange={onChange}
@@ -86,7 +80,12 @@ const ActionPanel = ({
               placeholder="0.00"
             />
           </InputContainer>
-          <Balance asset={activeToken.name} />
+          <Flex>
+            <Balance asset={activeToken.name} />
+            {onSetMaxAmount && (
+              <MaxButton onClick={onSetMaxAmount}>Max</MaxButton>
+            )}
+          </Flex>
         </BalanceContainer>
       </TokenCard>
       {errorMsg && (
@@ -102,20 +101,26 @@ const ActionPanel = ({
           lText={
             <Flex gap={5}>
               C-Ratio
-              <InfoTooltip content={cRatioInfoContent} />
+              <InfoTooltip content={cRatioInfoContent} id="c-ratio" />
             </Flex>
           }
           rText={
             <CRatio
               cRatio={cRatio}
-              minCRatio={safeMinCratio || minCRatio}
+              minCRatio={minCRatio}
               newCRatio={newCRatio}
             />
           }
         />
+        {liquidationPrice && (
+          <RatioRow
+            lText="Liquidation Price"
+            rText={formatDollar(liquidationPrice?.toString(2))}
+          />
+        )}
         <RatioRow lText="Min C-Ratio" rText={formatPercent(minCRatio)} />
         <SeparateLine />
-        <RatioRow lText="Borrow APY" rText={formatPercent(interestRate)} />
+        <RatioRow lText="Interest Rate" rText={formatPercent(interestRate)} />
         <RatioRow lText="Issuance Fee" rText={formatPercent(issueFeeRate)} />
         <SeparateLine />
         <RatioRow
@@ -219,9 +224,6 @@ const ErrorContainer = styled(FlexItemsCenter)`
 
 const InputContainer = styled(Flex)`
   justify-content: flex-end;
-  input {
-    width: 20%;
-  }
 `;
 const MaxButton = styled(BaseButton)`
   color: ${({ theme }) => theme.colors.cyan500};

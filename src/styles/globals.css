@@ -2,17 +2,20 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, Segoe UI,
+  font-family: "Inter Regular", -apple-system, BlinkMacSystemFont, Segoe UI,
     Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
     sans-serif;
   font-style: normal;
-  background-repeat: no-repeat;
-  background-size: cover;
   color: white;
 }
 
 html {
-  min-height: 100%;
+  width: 100%;
+  height: 100%;
+  min-width: 1080px;
+  min-height: 956px;
+  background-position-x: right;
+  background-position-y: top;
   background-image: linear-gradient(
       0deg,
       rgba(0, 0, 0, 0.8),
@@ -22,11 +25,13 @@ html {
 }
 
 body {
-  height: 100%;
-  min-height: 1000px;
-  background: right/contain no-repeat url("../../assets/svg/background.svg");
+  background: no-repeat url("../../assets/svg/background.svg");
   background-position-x: right;
   background-position-y: top;
+  background-size: contain;
+
+  width: 100%;
+  height: 100%;
 }
 
 a {

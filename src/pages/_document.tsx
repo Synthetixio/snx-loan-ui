@@ -10,6 +10,7 @@ import { ServerStyleSheet } from 'styled-components';
 const PRELOADED_FONTS = [
   `./fonts/Inter-Regular.woff2`,
   `./fonts/Inter-Bold.woff2`,
+  `./fonts/Lustra-Text-Regular.ttf`
 ];
 
 export default class MyDocument extends Document {
@@ -44,7 +45,6 @@ export default class MyDocument extends Document {
               rel="preload"
               href={fontPath}
               as="font"
-              type="font/woff2"
               crossOrigin="anonymous"
             />
           ))}

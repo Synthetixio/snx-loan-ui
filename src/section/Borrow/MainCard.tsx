@@ -1,28 +1,32 @@
-import styled from 'styled-components';
-import Wei, { wei } from '@synthetixio/wei';
-import { useState } from 'react';
-import useTokensBalances from '@/hooks/useTokensBalances';
-import { BaseCard } from '@/components/Base/Card';
-import { FlexCol, FlexItemsCenter, Flex } from '@/components/Base/Div';
-import NumericInput from '@/components/NumericInput';
-import { ArrowDown } from 'react-feather';
-import { sUSD, ETH, sETH } from '@/constants/tokens';
-import type { TokenInterface } from '@/constants/tokens';
-import { Text12 } from '@/components/Base/Text';
-import ActionPanel from '@/components/ActionPanel';
-import TokenSelector from '@/components/TokenSelector';
-import useSynthetixQueries, { GasPrice } from '@synthetixio/queries';
-import Connector from '@/containers/connector/Connector';
-import Balance from '@/components/Balance';
-import { calculateLoanCRatio, calcSafeMaxCRatio as calcSafeMaxDebtAmount } from '@/components/ActionPanel/utils';
-import Loans from '@/containers/Loans';
-import SubmitButton from './components/SubmitButton';
-import { getSafeMinCRatioBuffer } from './utils';
-import { ethers } from 'ethers';
-import { useQuery } from 'react-query';
-import generateWei from '@/utils/wei';
-import { BaseButton } from '@/components/Base/Button';
-import { useETHBalance } from '@/hooks/useBalance';
+import styled from "styled-components";
+import Wei, { wei } from "@synthetixio/wei";
+import { useState } from "react";
+import useTokensBalances from "@/hooks/useTokensBalances";
+import { BaseCard } from "@/components/Base/Card";
+import { FlexCol, FlexItemsCenter, Flex } from "@/components/Base/Div";
+import NumericInput from "@/components/NumericInput";
+import { ArrowDown } from "react-feather";
+import { sUSD, ETH, sETH } from "@/constants/tokens";
+import type { TokenInterface } from "@/constants/tokens";
+import { Text12 } from "@/components/Base/Text";
+import ActionPanel from "@/components/ActionPanel";
+import TokenSelector from "@/components/TokenSelector";
+import useSynthetixQueries, { GasPrice } from "@synthetixio/queries";
+import Connector from "@/containers/connector/Connector";
+import Balance from "@/components/Balance";
+import {
+  calculateLoanCRatio,
+  calcSafeMaxCRatio as calcSafeMaxDebtAmount,
+} from "@/components/ActionPanel/utils";
+import Loans from "@/containers/Loans";
+import SubmitButton from "./components/SubmitButton";
+import { getSafeMinCRatioBuffer } from "./utils";
+import { ethers } from "ethers";
+import { useQuery } from "react-query";
+import generateWei from "@/utils/wei";
+import { BaseButton } from "@/components/Base/Button";
+import { useETHBalance } from "@/hooks/useBalance";
+import { useLiquidationPrice2 } from "@/hooks/useLiquidationPrice";
 
 export default function MainCard() {
   const { synthetixjs, isWalletConnected } = Connector.useContainer();
@@ -48,7 +52,7 @@ export default function MainCard() {
     async () => {
       if (!loanContract) return wei(0);
       return wei(await loanContract.minCollateral());
-    },
+    }
   );
   const openTxn = useSynthetixTxn(
     `CollateralEth`,
@@ -57,7 +61,7 @@ export default function MainCard() {
     {
       ...gasPrice,
       value: collateralWei.amount.toBN(),
-    },
+    }
   );
   const onSubmit = () => {
     if (!openTxn) return;
@@ -72,7 +76,7 @@ export default function MainCard() {
     !debtWei.amount.eq(0) &&
     cRatio.lt(safeMinCratio);
   const hasInsufficientCollateral = collateralBalance.lt(minCollateralAmount);
-  const hasInsufficientBalance = collateralBalance.lt(collateralWei.amount)
+  const hasInsufficientBalance = collateralBalance.lt(collateralWei.amount);
   if (hasLowCollateralAmount) {
     errorMsg = `MINIMUM COLLATERAL IS ${minCollateralAmount.toString(2)}`;
   } else if (hasLowCratio) {
@@ -88,7 +92,13 @@ export default function MainCard() {
     collateralWei,
     debtToken.name,
     safeMinCratio
-  )
+  );
+
+  const liquidationPrice = useLiquidationPrice2(
+    collateralWei.amount,
+    debtWei.amount,
+    debtToken.name
+  );
 
   return (
     <Container>
@@ -103,14 +113,20 @@ export default function MainCard() {
         />
         <BalanceContainer>
           <InputContainer>
-            <MaxButton onClick={() => setCollateralInput(ethBalance.toString(2))}>Max</MaxButton>
             <NumericInput
               value={collateralInput}
               placeholder="0.00"
               onChange={setCollateralInput}
             />
           </InputContainer>
-          <Balance asset="ETH" />
+          <Flex>
+            <Balance asset="ETH" />
+            <MaxButton
+              onClick={() => setCollateralInput(ethBalance.toString(2))}
+            >
+              Max
+            </MaxButton>
+          </Flex>
         </BalanceContainer>
       </TokenCard>
       <IconArrow>
@@ -119,7 +135,7 @@ export default function MainCard() {
       <ActionPanel
         onSetMaxAmount={() => setDebtInput(safeMaxDebtAmount.toString(4))}
         tokenList={[sUSD, sETH]}
-        errorMsg={(debtInput && collateralInput) ? errorMsg : ''}
+        errorMsg={debtInput && collateralInput ? errorMsg : ""}
         onGasChange={setGasPrice}
         optimismLayerOneFee={openTxn.optimismLayerOneFee}
         cRatio={cRatio}
@@ -127,7 +143,7 @@ export default function MainCard() {
         activeToken={debtToken}
         onClick={setDebtToken}
         onChange={setDebtInput}
-        safeMinCratio={safeMinCratio}
+        liquidationPrice={liquidationPrice}
       />
       <SubmitButton
         disabled={!!errorMsg}
@@ -168,9 +184,6 @@ const IconArrow = styled(FlexItemsCenter)`
 
 const InputContainer = styled(Flex)`
   justify-content: flex-end;
-  input {
-    width: 20%;
-  }
 `;
 const MaxButton = styled(BaseButton)`
   color: ${({ theme }) => theme.colors.cyan500};
