@@ -67,7 +67,6 @@ const PositionTable = (): JSX.Element => {
       Cell: (props: any) => <Text size={14}>N/A</Text>,
       Header: <HeaderText>C-Ratio</HeaderText>,
       width: 102,
-      sortable: true,
     },
     {
       accessor: `closedAt`,
@@ -78,6 +77,7 @@ const PositionTable = (): JSX.Element => {
       ),
       Header: <HeaderText>Closed At</HeaderText>,
       width: 145,
+      sortable: true,
     },
     {
       Cell: (props: any) => (
@@ -88,7 +88,6 @@ const PositionTable = (): JSX.Element => {
       ),
       accessor: `interestRate`,
       Header: <HeaderText>Interest Rate</HeaderText>,
-      sortable: true,
       width: 245,
     },
   ];
