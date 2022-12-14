@@ -1,21 +1,15 @@
-import styled from "styled-components";
-import { BaseCard } from "@/components/Base/Card";
-import { Text } from "@/components/Base/Text";
-import { FlexRow, FlexCol } from "@/components/Base/Div";
-import ReactTable from "@/components/Table/ReactTable";
-import Loans from "@/containers/Loans";
-import { wei } from "@synthetixio/wei";
-import useSynthetixQueries from "@synthetixio/queries";
+import styled from 'styled-components'
+import { BaseCard } from '@/components/Base/Card'
+import { Text } from '@/components/Base/Text'
+import { FlexRow, FlexCol } from '@/components/Base/Div'
+import Loans from '@/containers/Loans'
+import { wei } from '@synthetixio/wei'
+import useSynthetixQueries from '@synthetixio/queries'
 
 const PendingWithdrawals = () => {
-  const data = [{}, {}].map(() => ({
-    number: 355,
-    timestamp: Date.now(),
-    amount: 0.3,
-  }));
   const { pendingWithdrawals, reloadPendingWithdrawals, ethLoanContract } =
-    Loans.useContainer();
-  const { useSynthetixTxn } = useSynthetixQueries();
+    Loans.useContainer()
+  const { useSynthetixTxn } = useSynthetixQueries()
 
   const claimTxn = useSynthetixTxn(
     `CollateralETH`,
@@ -25,42 +19,19 @@ const PendingWithdrawals = () => {
     {
       enabled: Boolean(ethLoanContract) && pendingWithdrawals.gt(0),
       async onSuccess() {
-        await reloadPendingWithdrawals();
+        await reloadPendingWithdrawals()
       },
     }
-  );
+  )
 
   const claimPendingWithdrawals = () => {
-    claimTxn.mutate();
-  };
-  const columns = [
-    {
-      accessor: `number`,
-      Cell: (props: any) => (
-        <LoanCell>
-          <Text size={14}>{`Loan #${props.row.original.number}`}</Text>
-          <Text size={12} color={`#9999ac`}>
-            {new Date(props.row.original.timestamp).toDateString()}
-          </Text>
-        </LoanCell>
-      ),
-      width: `unset`,
-    },
-    {
-      width: `unset`,
-      accessor: `amount`,
-      Cell: (props: any) => (
-        <AmountCell>
-          <Text size={14}>{`${props.row.original.amount} ETH`}</Text>
-        </AmountCell>
-      ),
-      className: `table-cell-amount`,
-    },
-  ];
+    claimTxn.mutate()
+  }
   return (
     <Container>
       <Text size={20}>Pending Withdrawals</Text>
       <TotalClaim>
+        <ClaimButton onClick={claimPendingWithdrawals}>Claim</ClaimButton>
         {pendingWithdrawals.gt(0) ? (
           <>
             <FlexCol>
@@ -78,17 +49,11 @@ const PendingWithdrawals = () => {
           <Text size={16}> You have no pending withdrawals. </Text>
         )}
       </TotalClaim>
-      {/* <ReactTable */}
-      {/*   columns={columns} */}
-      {/*   data={data} */}
-      {/*   hideHeaders={true} */}
-      {/*   cardHeight="40px" */}
-      {/* /> */}
     </Container>
-  );
-};
+  )
+}
 
-export default PendingWithdrawals;
+export default PendingWithdrawals
 
 const Container = styled(BaseCard)`
   padding: 20px;
@@ -115,7 +80,7 @@ const Container = styled(BaseCard)`
       }
     }
   }
-`;
+`
 
 const TotalClaim = styled(FlexRow)`
   border: 1px solid #2d2d38;
@@ -125,7 +90,7 @@ const TotalClaim = styled(FlexRow)`
   align-items: center;
   border-radius: 6px;
   margin-top: 20px;
-`;
+`
 
 const ClaimButton = styled.button`
   pointer: cursor;
@@ -135,9 +100,9 @@ const ClaimButton = styled.button`
   background: transparent;
   border: 1px solid #00d1ff;
   border-radius: 4px;
-`;
+`
 
-const LoanCell = styled(FlexCol)``;
+const LoanCell = styled(FlexCol)``
 const AmountCell = styled.div`
   text-align: right;
-`;
+`
