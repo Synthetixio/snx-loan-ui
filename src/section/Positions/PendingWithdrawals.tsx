@@ -31,7 +31,6 @@ const PendingWithdrawals = () => {
     <Container>
       <Text size={20}>Pending Withdrawals</Text>
       <TotalClaim>
-        <ClaimButton onClick={claimPendingWithdrawals}>Claim</ClaimButton>
         {pendingWithdrawals.gt(0) ? (
           <>
             <FlexCol>
