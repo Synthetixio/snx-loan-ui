@@ -4,28 +4,30 @@ import { Text } from '@/components/Base/Text'
 import { FlexRow, FlexCol } from '@/components/Base/Div'
 import Loans from '@/containers/Loans'
 import { wei } from '@synthetixio/wei'
-import useSynthetixQueries from '@synthetixio/queries'
+
+import {
+  abi as OVM_ABI,
+  address as OVM_ADDRESS,
+} from '@synthetixio/contracts/build/mainnet-ovm/deployment/CollateralEth'
+import {
+  abi as ETH_ABI,
+  address as ETH_ADDRESS,
+} from '@synthetixio/contracts/build/mainnet/deployment/CollateralEth'
+import { Contract, Signer } from 'ethers'
+import Connector from '@/containers/connector/Connector'
 
 const PendingWithdrawals = () => {
   const { pendingWithdrawals, reloadPendingWithdrawals, ethLoanContract } =
     Loans.useContainer()
-  const { useSynthetixTxn } = useSynthetixQueries()
-
-  const claimTxn = useSynthetixTxn(
-    `CollateralETH`,
-    `claim`,
-    [pendingWithdrawals],
-    {},
-    {
-      enabled: Boolean(ethLoanContract) && pendingWithdrawals.gt(0),
-      async onSuccess() {
-        await reloadPendingWithdrawals()
-      },
-    }
+  const { signer, isL2 } = Connector.useContainer()
+  const collateralEth = new Contract(
+    isL2 ? OVM_ADDRESS : ETH_ADDRESS,
+    isL2 ? OVM_ABI : ETH_ABI,
+    signer as Signer
   )
 
   const claimPendingWithdrawals = () => {
-    claimTxn.mutate()
+    collateralEth['claim'](pendingWithdrawals)
   }
   return (
     <Container>
@@ -37,12 +39,7 @@ const PendingWithdrawals = () => {
               <Text size={16}>Total to claim</Text>
               <Text size={18}>{wei(pendingWithdrawals).toString(2)} ETH</Text>
             </FlexCol>
-            <ClaimButton
-              disabled={pendingWithdrawals.eq(0)}
-              onClick={claimPendingWithdrawals}
-            >
-              Claim
-            </ClaimButton>
+            <ClaimButton onClick={claimPendingWithdrawals}>Claim</ClaimButton>
           </>
         ) : (
           <Text size={16}> You have no pending withdrawals. </Text>
