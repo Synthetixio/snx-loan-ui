@@ -17,7 +17,7 @@ import { Contract, Signer } from 'ethers'
 import Connector from '@/containers/connector/Connector'
 
 const PendingWithdrawals = () => {
-  const { pendingWithdrawals, reloadPendingWithdrawals, ethLoanContract } =
+  const { pendingWithdrawals, reloadPendingWithdrawals } =
     Loans.useContainer()
   const { signer, isL2 } = Connector.useContainer()
   const collateralEth = new Contract(
@@ -26,8 +26,9 @@ const PendingWithdrawals = () => {
     signer as Signer
   )
 
-  const claimPendingWithdrawals = () => {
-    collateralEth['claim'](pendingWithdrawals)
+  const claimPendingWithdrawals = async () => {
+    await collateralEth['claim'](pendingWithdrawals)
+    reloadPendingWithdrawals()
   }
   return (
     <Container>
