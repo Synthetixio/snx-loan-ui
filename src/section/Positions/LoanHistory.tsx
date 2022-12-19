@@ -7,6 +7,7 @@ import { ChevronDown } from "react-feather";
 import Loans from "@/containers/Loans";
 import { wei } from "@synthetixio/wei";
 import LoanCell from "./LoanCell";
+import { TxExplorer } from "@/components/Wallet/Explorer";
 
 const TogglePanel = () => {
   const { value: isActive, toggle } = useBoolean(false);
@@ -34,11 +35,13 @@ const PositionTable = (): JSX.Element => {
     {
       accessor: `loan`,
       Cell: (props: any) => (
-        <LoanCell
-          id={String(Number(props.row.original.id))}
-          debtToken={props.row.original.currency}
-          collateralToken={`ETH`}
-        />
+        <TxExplorer txHash={props.row.original.txHash}>
+          <LoanCell
+            id={String(Number(props.row.original.id))}
+            debtToken={props.row.original.currency}
+            collateralToken={`ETH`}
+          />
+        </TxExplorer>
       ),
       Header: <HeaderText>Loan</HeaderText>,
       width: 120,
@@ -64,15 +67,17 @@ const PositionTable = (): JSX.Element => {
       Cell: (props: any) => <Text size={14}>N/A</Text>,
       Header: <HeaderText>C-Ratio</HeaderText>,
       width: 102,
-      sortable: true,
     },
     {
       accessor: `closedAt`,
-      Cell: ({ row }: any) => <Text size={14}>
-        {(new Date(row.original.closedAt * 1000)).toLocaleString()}
-      </Text>,
+      Cell: ({ row }: any) => (
+        <Text size={14}>
+          {new Date(row.original.closedAt * 1000).toLocaleString()}
+        </Text>
+      ),
       Header: <HeaderText>Closed At</HeaderText>,
       width: 145,
+      sortable: true,
     },
     {
       Cell: (props: any) => (
@@ -83,7 +88,6 @@ const PositionTable = (): JSX.Element => {
       ),
       accessor: `interestRate`,
       Header: <HeaderText>Interest Rate</HeaderText>,
-      sortable: true,
       width: 245,
     },
   ];
@@ -113,7 +117,7 @@ const NoResult = styled(FlexRowCentered)`
   padding: 20px 0;
   align-item: center;
   justify-content: center;
-`
+`;
 
 const AmountCell = ({
   title,

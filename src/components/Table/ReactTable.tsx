@@ -13,6 +13,7 @@ import { ArrowDown, ArrowUp } from "react-feather";
 
 import { FlexItemsCenter, GridDivCenteredRow } from "@/components/Base/Div";
 import Pagination from "./Pagination";
+import { SortTableHead } from "./SortTableHead";
 
 export type TablePalette = "primary";
 
@@ -143,15 +144,11 @@ export const Table: FC<TableProps> = ({
                     key={column.id}
                   >
                     {column.render(`Header`)}
-                    {column.sortable && (
-                      <SortIconContainer>
-                        {column.isSortedDesc ? (
-                          <ArrowUp size={12} color="#2ED9FF" />
-                        ) : (
-                          <ArrowDown size={12} color="#2ED9FF" />
-                        )}
-                      </SortIconContainer>
-                    )}
+                    <SortTableHead 
+                      isSortedDesc={column.isSortedDesc}
+                      isSorted={column.isSorted}
+                      sortable={column.sortable}
+                    />
                   </TableCellHead>
                 ))}
               </TableRow>
