@@ -1,26 +1,28 @@
-import styled from 'styled-components';
-import Image from 'next/image';
-import { ChevronDown } from 'react-feather';
+import styled from "styled-components";
+import Image from "next/image";
+import { ChevronDown } from "react-feather";
 
-import { DefaultDropdownMenu } from '@/components/Dropdown';
-import { Text18 } from '@/components/Base/Text';
-import { Flex } from '@/components/Base/Div';
-import type { TokenInterface } from '@/constants/tokens';
+import { DefaultDropdownMenu } from "@/components/Dropdown";
+import { Text18 } from "@/components/Base/Text";
+import { Flex } from "@/components/Base/Div";
+import type { TokenInterface } from "@/constants/tokens";
 
 export interface TokenSelectorProps {
   activeToken: TokenInterface;
   tokenList: TokenInterface[];
   onClick?: (token: TokenInterface) => void;
+  disabled?: boolean;
 }
 
 const TokenSelector = ({
   activeToken,
   tokenList,
   onClick,
+  disabled,
 }: TokenSelectorProps) => {
   if (tokenList.length === 0 || !onClick) {
     return (
-      <CoinSelector>
+      <CoinSelector cursor="default">
         <Image
           src={activeToken.src}
           alt={activeToken.name}
@@ -31,12 +33,14 @@ const TokenSelector = ({
       </CoinSelector>
     );
   }
+
   return (
     <DefaultDropdownMenu
       leftOffset={`-8`}
       offset={64}
+      disabled={disabled}
       trigger={
-        <CoinSelector>
+        <CoinSelector cursor={disabled ? "default" : "pointer"}>
           <Image
             src={activeToken.src}
             alt={activeToken.name}
@@ -67,9 +71,9 @@ const TokenSelector = ({
 
 export default TokenSelector;
 
-const CoinSelector = styled(Flex)<{ height?: string }>`
+const CoinSelector = styled(Flex)<{ height?: string; cursor?: string }>`
   z-index: 1;
-  cursor: pointer;
+  cursor: ${({ cursor }) => cursor || `pointer`};
   align-items: center;
   gap: 5px;
   height: ${({ height }) => height || `100%`};

@@ -54,6 +54,17 @@ export default function MainCard() {
       return wei(await loanContract.minCollateral());
     }
   );
+  const { data: canOpenLoans } = useQuery<Boolean>(
+    ["canOpenLoans", loanContract?.address],
+    async () => {
+      if (!loanContract) {
+        throw Error("Query should not be enabled when missing loan contract");
+      }
+      return await loanContract.canOpenLoans();
+    },
+    { enabled: Boolean(loanContract) }
+  );
+
   const openTxn = useSynthetixTxn(
     `CollateralEth`,
     `open`,
@@ -61,7 +72,8 @@ export default function MainCard() {
     {
       ...gasPrice,
       value: collateralWei.amount.toBN(),
-    }
+    },
+    { enabled: Boolean(canOpenLoans) }
   );
   const onSubmit = () => {
     if (!openTxn) return;
@@ -110,10 +122,12 @@ export default function MainCard() {
           onClick={setCollateralToken}
           activeToken={collateralToken}
           tokenList={[]}
+          disabled={canOpenLoans === false}
         />
         <BalanceContainer>
           <InputContainer>
             <NumericInput
+              disabled={canOpenLoans === false}
               value={collateralInput}
               placeholder="0.00"
               onChange={setCollateralInput}
@@ -122,6 +136,7 @@ export default function MainCard() {
           <Flex>
             <Balance asset="ETH" />
             <MaxButton
+              disabled={canOpenLoans === false}
               onClick={() => setCollateralInput(ethBalance.toString(2))}
             >
               Max
@@ -133,9 +148,17 @@ export default function MainCard() {
         <ArrowDown size={32} color="#9999AC" />
       </IconArrow>
       <ActionPanel
+        disableInput={canOpenLoans === false}
+        disabled={canOpenLoans === false}
         onSetMaxAmount={() => setDebtInput(safeMaxDebtAmount.toString(4))}
         tokenList={[sUSD, sETH]}
-        errorMsg={debtInput && collateralInput ? errorMsg : ""}
+        errorMsg={
+          debtInput && collateralInput
+            ? errorMsg
+            : canOpenLoans === false
+            ? "Loans are currently not open for new deposits"
+            : ""
+        }
         onGasChange={setGasPrice}
         optimismLayerOneFee={openTxn.optimismLayerOneFee}
         cRatio={cRatio}
