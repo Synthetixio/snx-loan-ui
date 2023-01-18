@@ -11,7 +11,7 @@ type DefaultDropdownMenuProps = {
   dropdownCls?: string;
   offset?: number;
   leftOffset?: number | string;
-  disabled?: Boolean;
+  disabled?: boolean;
 };
 
 const DropdownContainer = styled.div`
