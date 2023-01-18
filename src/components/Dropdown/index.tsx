@@ -1,7 +1,7 @@
-import React, { ReactElement } from 'react';
-import { FC, useRef } from 'react';
-import styled, { css } from 'styled-components';
-import { useOnClickOutside, useBoolean } from 'usehooks-ts';
+import React, { ReactElement } from "react";
+import { FC, useRef } from "react";
+import styled, { css } from "styled-components";
+import { useOnClickOutside, useBoolean } from "usehooks-ts";
 
 type DefaultDropdownMenuProps = {
   trigger: JSX.Element;
@@ -11,6 +11,7 @@ type DefaultDropdownMenuProps = {
   dropdownCls?: string;
   offset?: number;
   leftOffset?: number | string;
+  disabled?: boolean;
 };
 
 const DropdownContainer = styled.div`
@@ -51,6 +52,7 @@ const DefaultDropdownMenu: FC<DefaultDropdownMenuProps> = ({
   dropdownCls,
   offset = 0,
   leftOffset = 0,
+  disabled,
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { value: isActive, setTrue, setFalse } = useBoolean(false);
@@ -59,7 +61,10 @@ const DefaultDropdownMenu: FC<DefaultDropdownMenuProps> = ({
 
   return (
     <DropdownContainer ref={dropdownRef} className={className}>
-      <DropdownTrigger className={triggerCls} onClick={setTrue}>
+      <DropdownTrigger
+        className={triggerCls}
+        onClick={disabled ? undefined : setTrue}
+      >
         {trigger}
       </DropdownTrigger>
       <DropdownList

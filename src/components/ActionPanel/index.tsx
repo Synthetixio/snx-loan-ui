@@ -21,7 +21,7 @@ import AlertIcon from "@/assets/png/alert.png";
 import Image from "next/image";
 import InfoTooltip from "../Tooltip";
 import { BaseButton } from "@/components/Base/Button";
-import {formatDollar} from "@/utils/string";
+import { formatDollar } from "@/utils/string";
 
 export interface ActionPanelProps extends TokenSelectorProps {
   value: string;
@@ -50,6 +50,7 @@ const ActionPanel = ({
   disableInput = false,
   onSetMaxAmount,
   liquidationPrice,
+  disabled,
 }: ActionPanelProps) => {
   const { isL2 } = Connector.useContainer();
   const { issueFeeRate, interestRate, minCRatio } = Loans.useContainer();
@@ -70,6 +71,7 @@ const ActionPanel = ({
           onClick={onClick}
           activeToken={activeToken}
           tokenList={tokenList}
+          disabled={disabled}
         />
         <BalanceContainer>
           <InputContainer>
@@ -83,7 +85,9 @@ const ActionPanel = ({
           <Flex>
             <Balance asset={activeToken.name} />
             {onSetMaxAmount && (
-              <MaxButton onClick={onSetMaxAmount}>Max</MaxButton>
+              <MaxButton disabled={disabled} onClick={onSetMaxAmount}>
+                Max
+              </MaxButton>
             )}
           </Flex>
         </BalanceContainer>
